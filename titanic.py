@@ -1,37 +1,20 @@
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 
+df = pd.read_parquet('titanic.parquet') #читаем parquet
+df.to_csv('titanic.csv', index=False) #переделываем его в csv
 
-Tab = pd.read_parquet('titanic.parquet') # Читаем файл
+df = pd.read_csv('titanic.csv') #читаем csv файл
+#переделываем наши данные в таблицу
+survival_counts = df.groupby(['Pclass', 'Survived']).size().unstack(fill_value=0)
 
+#строим гистограмму с объединыннеми столбцами
+survival_counts.plot(kind='bar', stacked=True)
 
-Tab.to_csv('titanic.csv') # Переводим в csv и сохраняем
-
-
-survival = Tab.groupby('Pclass')['Survived'].value_counts().unstack(fill_value=0)   # ГСчитаем выживших и погибших
-
-
-survival_stats_norm = survival.div(survival.sum(axis=1), axis=0) * 100  #Переводим в проценты
-
-# Данные для графика
-classes = ['Первый класс', 'Второй класс', 'Третий класс']
-survived = survival_stats_norm[1].values
-not_survived = survival_stats_norm[0].values
-
-# Создаём график
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.set_yticks([0, 50, 100])  
-ax.set_yticklabels(['0%', '50%', '100%']) 
-bars_1 = ax.bar(classes, survived, color='blue', label='Выжил')
-bars_2 = ax.bar(classes, not_survived, bottom=survived, color='orange', label='Не выжил')
-
-# Настройки графика
-ax.set_ylim(0, 100)
-ax.set_title('Выживаемость пассажиров Титаника', fontsize=16, pad=20)
-ax.grid(axis='y', linestyle='--', alpha=0.7)
-
-# Делаем легенду
-ax.legend(loc='upper center', bbox_to_anchor=(0.5, 1.00), shadow=True, ncol=2)
-
+plt.title('Выживаемость пассажиров Титаника') 
+plt.xlabel('Класс билета') 
+plt.ylabel('Количество пассажиров') 
+plt.xticks(rotation=0)# повернем значения классов билетов
+plt.legend(['Не выжил', 'Выжил']) #легенда карты
 plt.tight_layout()
 plt.show()
