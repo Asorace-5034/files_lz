@@ -1,20 +1,24 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-df = pd.read_parquet('titanic.parquet') #читаем parquet
-df.to_csv('titanic.csv', index=False) #переделываем его в csv
+# parquet в csv
+par = pd.read_parquet('titanic.parquet')
+par.to_csv('titanic.csv', index=False)
 
-df = pd.read_csv('titanic.csv') #читаем csv файл
-#переделываем наши данные в таблицу
-survival_counts = df.groupby(['Pclass', 'Survived']).size().unstack(fill_value=0)
+par = pd.read_csv('titanic.csv') # Чтение данных
 
-#строим гистограмму с объединыннеми столбцами
-survival_counts.plot(kind='bar', stacked=True)
 
-plt.title('Выживаемость пассажиров Титаника') 
-plt.xlabel('Класс билета') 
-plt.ylabel('Количество пассажиров') 
-plt.xticks(rotation=0)# повернем значения классов билетов
-plt.legend(['Не выжил', 'Выжил']) #легенда карты
-plt.tight_layout()
+surv = par.groupby(['Pclass', 'Survived']).size().unstack(fill_value=0)#новая таблица
+
+
+surv_percent = surv.div(surv.sum(axis=1), axis=0) * 100 # проценты в оси y
+
+#график
+surv_percent.plot(kind='bar', stacked=True, color=['blue', 'orange'])
+plt.title('Процент выживших пассажиров Титаника по классам билетов')
+plt.xlabel('Класс билета')
+plt.ylabel('Процент пассажиров')
+plt.xticks(rotation=0)  # Поворот меток оси X
+plt.legend(['Не выжил', 'Выжил'])  # Легенда
+
 plt.show()
