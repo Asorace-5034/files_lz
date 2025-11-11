@@ -11,7 +11,7 @@ stat = {}
 symbols = {}
 
 for paragraph in doc.paragraphs:
-    text.append(paragraph.text)             # получаем массив строк, в которых находятся обзацы
+    text.append(paragraph.text)             # получаем массив строк, в которых находятся абзацы
 
 
 for i in text:                              # создаем один единый текст в виде одной строки
@@ -39,35 +39,35 @@ for char in all_text:
 total = sum(stat.values())
 
 # Создаём таблицу
-df = pd.DataFrame.from_dict(
+Tab = pd.DataFrame.from_dict(
     stat,
     orient='index',
-    columns=['Частота (раз)']
+    columns=['Частота, раз']
 )
 
 
-df['Частота (%)'] = (df['Частота (раз)'] / total * 100).round(2)   # Добавляем процентный столбец
+Tab['Частота (%)'] = (Tab['Частота (раз)'] / total * 100).round(2)   # Добавляем процентный столбец
 
 
-df.index.name = 'Слово'    # Задаём имя индекса
+Tab.index.name = 'Слово'    # Задаём имя индекса
 
 # Сохраняем в Excel
 output_file = 'Результат.xlsx'
-df.to_excel(output_file, index=True)
+Tab.to_excel(output_file, index=True)
 
 # создаем таблицу для букв
 plt.figure(figsize=(12, 6))  # размер холста: ширина 12, высота 6 дюймов
 
 
 # сортируем буквы по алфавиту
-sorted_letters = sorted(symbols.keys())  # буквы в алфавитном порядке
-frequencies = [symbols[letter] for letter in sorted_letters]  # их частота
+sorted_symbols = sorted(symbols.keys())  # буквы в алфавитном порядке
+long = [symbols[letter] for letter in sorted_symbols]  # их частота
 
 
 # Строим столбцы 
 plt.bar(
-    sorted_letters,      
-    frequencies,        
+    sorted_symbols,      
+    long,        
     color='skyblue',    
     edgecolor='black'    
 )
