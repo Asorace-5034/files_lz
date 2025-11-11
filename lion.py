@@ -12,7 +12,7 @@ stat = {}
 
 for paragraph in doc.paragraphs:
     text.append(paragraph.text)             # получаем массив строк, в которых находятся обзацы
-print('\n'.join(text))
+
 
 for i in text:                              # создаем один единый текст в виде одной строки
     all_text += i
@@ -23,6 +23,7 @@ for i in text:
     if i in stat:
         stat[i] += 1
     else:
-        stat.update("i: 1")
+        stat[i] = 1
 
 
+print(stat)
