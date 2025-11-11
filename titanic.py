@@ -1,24 +1,24 @@
 import matplotlib.pyplot as plt
-import pandas as pd
+import pandas as pd             # импорты
 
 # parquet в csv
-par = pd.read_parquet('titanic.parquet')
-par.to_csv('titanic.csv', index=False)
+df = pd.read_parquet('titanic.parquet')
+df.to_csv('titanic.csv')
 
-par = pd.read_csv('titanic.csv') # Чтение данных
-
-
-surv = par.groupby(['Pclass', 'Survived']).size().unstack(fill_value=0)#новая таблица
+df = pd.read_csv('titanic.csv') # Чтение данных
 
 
-surv_percent = surv.div(surv.sum(axis=1), axis=0) * 100 # проценты в оси y
+survived = df.groupby(['Pclass', 'Survived']).size().unstack(fill_value=0)    # таблица
+
+
+surv_percent = survived.div(survived.sum(axis=1), axis=0) * 100 # проценты в оси y
 
 #график
 surv_percent.plot(kind='bar', stacked=True, color=['blue', 'orange'])
 plt.title('Процент выживших пассажиров Титаника по классам билетов')
 plt.xlabel('Класс билета')
 plt.ylabel('Процент пассажиров')
-plt.xticks(rotation=0)  # Поворот меток оси X
+plt.xticks(rotation=0)  # Поворот для нормального отображения оси X
 plt.legend(['Не выжил', 'Выжил'])  # Легенда
 
 plt.show()
